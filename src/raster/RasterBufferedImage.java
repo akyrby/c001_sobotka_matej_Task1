@@ -1,14 +1,13 @@
 package raster;
 
-import transforms.Col;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Optional;
+import transforms.Col;
 
 public class RasterBufferedImage implements Raster<Col> {
 
-    private BufferedImage image;
+    private final BufferedImage image;
 
     public RasterBufferedImage(int width, int height) {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);

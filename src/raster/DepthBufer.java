@@ -16,12 +16,13 @@ public class DepthBufer implements Raster<Double>{
     @Override
     public void setValue(int x, int y, Double value) {
         //TODO: implementovat
+        buffer[y][x] = value;
     }
 
     @Override
     public Optional<Double> getValue(int x, int y) {
         //TODO: implementovat
-        return Optional.empty();
+        return Optional.of(buffer[y][x]);
     }
 
     @Override
@@ -38,7 +39,11 @@ public class DepthBufer implements Raster<Double>{
 
     @Override
     public void clear() {
-
         //TODO: implementovat
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                buffer[y][x] = Double.POSITIVE_INFINITY;
+            }
+        }
     }
 }
