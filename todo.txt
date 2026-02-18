@@ -7,3 +7,6 @@
 7. HOTOVO: Transforamce do okna obrazovky
 8. TODO: Rasterizace trojúhelníky
 9. TODO: Viditelnost - ZBuffer
+
+
+TODO: Abstract TriangleRasterizer - vytvořit abstraktní třídu
