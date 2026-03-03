@@ -11,7 +11,7 @@ public class TriangleRasterizer extends TriangleRasterizerABS {
     }
 
     public void rasterize(Vertex a, Vertex b, Vertex c) {
-        // Convert to integer screen coordinates (rounded) and keep precise z and color
+
         int ax = (int) Math.round(a.getX());
         int ay = (int) Math.round(a.getY());
         double az = a.getZ();
@@ -27,33 +27,33 @@ public class TriangleRasterizer extends TriangleRasterizerABS {
         double cz = c.getZ();
         Col ccol = c.getCol();
 
-        // Sort vertices by Y ascending: (ax,ay) <= (bx,by) <= (cx,cy)
+
         if (ay > by) {
-            // swap A and B
+
             int tIX = ax; ax = bx; bx = tIX;
             int tIY = ay; ay = by; by = tIY;
             double tD = az; az = bz; bz = tD;
             Col tC = acol; acol = bcol; bcol = tC;
         }
         if (ay > cy) {
-            // swap A and C
+
             int tIX = ax; ax = cx; cx = tIX;
             int tIY = ay; ay = cy; cy = tIY;
             double tD = az; az = cz; cz = tD;
             Col tC = acol; acol = ccol; ccol = tC;
         }
         if (by > cy) {
-            // swap B and C
+
             int tIX = bx; bx = cx; cx = tIX;
             int tIY = by; by = cy; cy = tIY;
             double tD = bz; bz = cz; cz = tD;
             Col tC = bcol; bcol = ccol; ccol = tC;
         }
 
-        // Degenerate triangle check (all on same Y)
+
         if (ay == cy) return;
 
-        // Top half (A->B against A->C)
+
         if (by != ay) {
             for (int y = ay; y <= by; y++) {
                 double tAB = (double) (y - ay) / (double) (by - ay);
@@ -88,7 +88,7 @@ public class TriangleRasterizer extends TriangleRasterizerABS {
             }
         }
 
-        // Bottom half (B->C against A->C)
+
         if (cy != by) {
             for (int y = by; y <= cy; y++) {
                 double tBC = (double) (y - by) / (double) (cy - by);
