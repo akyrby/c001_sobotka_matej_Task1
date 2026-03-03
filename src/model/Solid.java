@@ -2,12 +2,13 @@ package model;
 
 import transforms.Mat4;
 
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class Solid {
-    private final List<Vertex> vertexBuffer;
-    private final List<Integer> indexBuffer;
-    private final List<SolidPart> partBuffer;
+    protected final List<Vertex> vertexBuffer;
+    protected final List<Integer> indexBuffer;
+    protected final List<SolidPart> partBuffer;
 
     private final Mat4 modelMat;
 
@@ -18,7 +19,9 @@ public abstract class Solid {
         this.partBuffer = partBuffer;
     }
 
-    // Public getters so rendering code can access geometry
+
+
+
     public List<Vertex> getVertexBuffer() {
         return vertexBuffer;
     }
@@ -33,5 +36,10 @@ public abstract class Solid {
 
     public Mat4 getModelMat() {
         return modelMat;
+    }
+
+
+    public void addIndices(Integer... indices) {
+        indexBuffer.addAll(Arrays.asList(indices));
     }
 }

@@ -1,12 +1,12 @@
-1. TODO: Definice tělesa ib, vb, part buffer
+1. HOTOVO: Definice tělesa ib, vb, part buffer
 2. HOTOVO: (M)Modelovací transforamce = model space -> world space
 3. HOTOVO: (V)KAMERA (pohledová transformace) = world space -> view space
 4. HOTOVO: (P) Projekce (projekční transformace persp/orth) = view space -> clip space
 5. TODO: Ořezání fast, ořezání z, ořezání x,y
 6. HOTOVO: Dehomogenizace (Dělení všech souřadnic w (x,y,z,w) -> NDC
 7. HOTOVO: Transforamce do okna obrazovky
-8. TODO: Rasterizace trojúhelníky
-9. TODO: Viditelnost - ZBuffer
+8. HOTOVO: Rasterizace trojúhelníky
+9. HOTOVO: Viditelnost - ZBuffer
 
 
 TODO: Abstract TriangleRasterizer - vytvořit abstraktní třídu
