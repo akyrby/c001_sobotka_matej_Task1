@@ -1,6 +1,7 @@
 package controller;
 
 import model.Arrow;
+import model.Sphere;
 import model.Vertex;
 import raster.ZBuffer;
 import rasterize.LineRasterizerGraphics;
@@ -55,13 +56,10 @@ public class Controller3D {
 
         panel.getRaster().clear();
 
-//        triangleRasterizer.rasterize(
-//                new Vertex(200,400,0.5, new Col(255,0,0)),
-//                new Vertex(400,400,0.5, new Col(0,255,0)),
-//                new Vertex(300,200,0.5, new Col(0,0,255))
-//        );
+
         RendererSolid rendererSolid = new RendererSolid(new LineRasterizerGraphics(panel.getRaster()), triangleRasterizer);
         rendererSolid.render(new Arrow());
+        rendererSolid.render(new Sphere());
 
         panel.repaint();
     }
