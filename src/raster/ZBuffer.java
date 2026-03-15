@@ -17,6 +17,14 @@ public class ZBuffer {
         depthBuffer.clear();
     }
 
+    public int getWidth() {
+        return imageBuffer.getWidth();
+    }
+
+    public int getHeight() {
+        return imageBuffer.getHeight();
+    }
+
     public void setPixelWithZTest(int x, int y, double z, Col color) {
         if (x < 0 || x >= imageBuffer.getWidth() || y < 0 || y >= imageBuffer.getHeight()) {
             return;
