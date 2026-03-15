@@ -9,6 +9,7 @@ import rasterize.TriangleRasterizer;
 import renderer.RendererSolid;
 import transforms.Col;
 import view.Panel;
+import model.Cube;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -60,6 +61,7 @@ public class Controller3D {
         RendererSolid rendererSolid = new RendererSolid(new LineRasterizerGraphics(panel.getRaster()), triangleRasterizer);
         rendererSolid.render(new Arrow());
         rendererSolid.render(new Sphere());
+        rendererSolid.render(new Cube());
 
         panel.repaint();
     }
