@@ -1,4 +1,4 @@
-package view;
+﻿package view;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -7,6 +7,7 @@ import java.awt.*;
 public class LegendPanel extends JPanel {
 
     private final JLabel projectionLabel;
+    private final JLabel wireframeLabel;
 
     public LegendPanel() {
         setLayout(new BorderLayout());
@@ -28,8 +29,8 @@ public class LegendPanel extends JPanel {
 
         content.add(section("Selected solid"));
         content.add(row("Q / E", "Rotate around Y"));
-        content.add(row("← / →", "Move on X"));
-        content.add(row("↑ / ↓", "Move on Z"));
+        content.add(row(" / ", "Move on X"));
+        content.add(row(" / ", "Move on Z"));
         content.add(row("R / F", "Move on Y"));
         content.add(row("X / C", "Scale up / down"));
         content.add(Box.createVerticalStrut(10));
@@ -46,6 +47,14 @@ public class LegendPanel extends JPanel {
         projectionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         projectionLabel.setFont(projectionLabel.getFont().deriveFont(Font.ITALIC, 12f));
         content.add(projectionLabel);
+        content.add(Box.createVerticalStrut(10));
+
+        content.add(section("Render mode"));
+        content.add(row("M", "Toggle wireframe / filled"));
+        wireframeLabel = new JLabel("Mode: Filled");
+        wireframeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        wireframeLabel.setFont(wireframeLabel.getFont().deriveFont(Font.ITALIC, 12f));
+        content.add(wireframeLabel);
         content.add(Box.createVerticalStrut(12));
 
         add(content, BorderLayout.NORTH);
@@ -53,6 +62,10 @@ public class LegendPanel extends JPanel {
 
     public void updateProjectionMode(boolean perspective) {
         projectionLabel.setText("Mode: " + (perspective ? "Perspective" : "Orthographic"));
+    }
+
+    public void updateWireframeMode(boolean wire) {
+        wireframeLabel.setText("Mode: " + (wire ? "Wireframe" : "Filled"));
     }
 
     private JLabel title(String text) {
