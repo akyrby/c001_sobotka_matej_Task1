@@ -55,7 +55,9 @@ public class TriangleRasterizer extends TriangleRasterizerABS {
 
 
         if (by != ay) {
-            for (int y = ay; y <= by; y++) {
+            int yFirst = Math.max(ay, 0);
+            int yLast  = Math.min(by, zBuffer.getHeight() - 1);
+            for (int y = yFirst; y <= yLast; y++) {
                 double tAB = (double) (y - ay) / (double) (by - ay);
                 double xABd = (1 - tAB) * ax + tAB * bx;
                 int xAB = (int) Math.round(xABd);
@@ -76,9 +78,12 @@ public class TriangleRasterizer extends TriangleRasterizerABS {
                 Col colEnd = xAB <= xAC ? colAC : colAB;
 
                 if (xEnd == xStart) {
-                    zBuffer.setPixelWithZTest(xStart, y, zStart, colStart);
+                    if (xStart >= 0 && xStart < zBuffer.getWidth())
+                        zBuffer.setPixelWithZTest(xStart, y, zStart, colStart);
                 } else {
-                    for (int x = xStart; x <= xEnd; x++) {
+                    int xWriteStart = Math.max(xStart, 0);
+                    int xWriteEnd   = Math.min(xEnd,   zBuffer.getWidth() - 1);
+                    for (int x = xWriteStart; x <= xWriteEnd; x++) {
                         double t = (x - xStart) / (double) (xEnd - xStart);
                         double z = (1 - t) * zStart + t * zEnd;
                         Col col = colStart.mul(1 - t).add(colEnd.mul(t));
@@ -90,7 +95,9 @@ public class TriangleRasterizer extends TriangleRasterizerABS {
 
 
         if (cy != by) {
-            for (int y = by; y <= cy; y++) {
+            int yFirst = Math.max(by, 0);
+            int yLast  = Math.min(cy, zBuffer.getHeight() - 1);
+            for (int y = yFirst; y <= yLast; y++) {
                 double tBC = (double) (y - by) / (double) (cy - by);
                 double xBCd = (1 - tBC) * bx + tBC * cx;
                 int xBC = (int) Math.round(xBCd);
@@ -111,9 +118,12 @@ public class TriangleRasterizer extends TriangleRasterizerABS {
                 Col colEnd = xBC <= xAC ? colAC : colBC;
 
                 if (xEnd == xStart) {
-                    zBuffer.setPixelWithZTest(xStart, y, zStart, colStart);
+                    if (xStart >= 0 && xStart < zBuffer.getWidth())
+                        zBuffer.setPixelWithZTest(xStart, y, zStart, colStart);
                 } else {
-                    for (int x = xStart; x <= xEnd; x++) {
+                    int xWriteStart = Math.max(xStart, 0);
+                    int xWriteEnd   = Math.min(xEnd,   zBuffer.getWidth() - 1);
+                    for (int x = xWriteStart; x <= xWriteEnd; x++) {
                         double t = (x - xStart) / (double) (xEnd - xStart);
                         double z = (1 - t) * zStart + t * zEnd;
                         Col col = colStart.mul(1 - t).add(colEnd.mul(t));
