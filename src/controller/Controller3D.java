@@ -21,12 +21,19 @@ import view.Panel;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 
 public class Controller3D {
+    private static final double CAMERA_MOVE_STEP = 0.15;
+    private static final double MOUSE_SENSITIVITY = 0.004;
+    private static final double PITCH_LIMIT = Math.toRadians(85.0);
+
     private final Panel panel;
     private final ZBuffer zBuffer;
     private final TriangleRasterizer triangleRasterizer;
@@ -40,8 +47,12 @@ public class Controller3D {
     private final double[] solidMoveZ;
 
     private int selectedSolidIndex = 0;
+    private Vec3D cameraPosition = new Vec3D(0.0, 1.5, 4.0);
     private double cameraYaw = 0.0;
-    private double cameraDistance = 4.0;
+    private double cameraPitch = 0.0;
+    private Integer lastMouseX = null;
+    private Integer lastMouseY = null;
+    private boolean leftMouseDown = false;
 
     private Mat4 viewMatrix;
     private Mat4 projectionMatrix;
@@ -128,17 +139,17 @@ public class Controller3D {
                         solidScale[selectedSolidIndex] += 0.05;
                         break;
 
-                    case KeyEvent.VK_A:
-                        cameraYaw -= 0.08;
-                        break;
-                    case KeyEvent.VK_D:
-                        cameraYaw += 0.08;
-                        break;
                     case KeyEvent.VK_W:
-                        cameraDistance = Math.max(1.0, cameraDistance - 0.15);
+                        moveCamera(CAMERA_MOVE_STEP, 0.0);
                         break;
                     case KeyEvent.VK_S:
-                        cameraDistance = Math.min(20.0, cameraDistance + 0.15);
+                        moveCamera(-CAMERA_MOVE_STEP, 0.0);
+                        break;
+                    case KeyEvent.VK_A:
+                        moveCamera(0.0, -CAMERA_MOVE_STEP);
+                        break;
+                    case KeyEvent.VK_D:
+                        moveCamera(0.0, CAMERA_MOVE_STEP);
                         break;
 
                     default:
@@ -149,6 +160,54 @@ public class Controller3D {
                     updateViewProjectionMatrices();
                     drawScene();
                 }
+            }
+        });
+
+        panel.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                // mouse look only while dragging with left button
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (leftMouseDown) {
+                    updateCameraByMouse(e);
+                }
+            }
+        });
+
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                lastMouseX = e.getX();
+                lastMouseY = e.getY();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                panel.requestFocusInWindow();
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    leftMouseDown = true;
+                    lastMouseX = e.getX();
+                    lastMouseY = e.getY();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    leftMouseDown = false;
+                    lastMouseX = null;
+                    lastMouseY = null;
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                leftMouseDown = false;
+                lastMouseX = null;
+                lastMouseY = null;
             }
         });
 
@@ -179,13 +238,45 @@ public class Controller3D {
 
         projectionMatrix = new Mat4PerspRH(Math.toRadians(60.0), (double) height / width, 0.1, 50.0);
 
-        Vec3D eye = new Vec3D(
-                Math.sin(cameraYaw) * cameraDistance,
-                1.5,
-                Math.cos(cameraYaw) * cameraDistance
+        double cosPitch = Math.cos(cameraPitch);
+        Vec3D viewVector = new Vec3D(
+                Math.sin(cameraYaw) * cosPitch,
+                Math.sin(cameraPitch),
+                -Math.cos(cameraYaw) * cosPitch
         );
-        Vec3D viewVector = new Vec3D(-eye.getX(), -eye.getY(), -eye.getZ());
-        viewMatrix = new Mat4ViewRH(eye, viewVector, new Vec3D(0, 1, 0));
+        viewMatrix = new Mat4ViewRH(cameraPosition, viewVector, new Vec3D(0, 1, 0));
+    }
+
+    private void moveCamera(double forwardDelta, double rightDelta) {
+        Vec3D forward = new Vec3D(Math.sin(cameraYaw), 0.0, -Math.cos(cameraYaw));
+        Vec3D right = new Vec3D(Math.cos(cameraYaw), 0.0, Math.sin(cameraYaw));
+        cameraPosition = cameraPosition
+                .add(forward.mul(forwardDelta))
+                .add(right.mul(rightDelta));
+    }
+
+    private void updateCameraByMouse(MouseEvent e) {
+        if (lastMouseX == null || lastMouseY == null) {
+            lastMouseX = e.getX();
+            lastMouseY = e.getY();
+            return;
+        }
+
+        int dx = e.getX() - lastMouseX;
+        int dy = e.getY() - lastMouseY;
+        lastMouseX = e.getX();
+        lastMouseY = e.getY();
+
+        if (dx == 0 && dy == 0) {
+            return;
+        }
+
+        cameraYaw += dx * MOUSE_SENSITIVITY;
+        cameraPitch -= dy * MOUSE_SENSITIVITY;
+        cameraPitch = Math.max(-PITCH_LIMIT, Math.min(PITCH_LIMIT, cameraPitch));
+
+        updateViewProjectionMatrices();
+        drawScene();
     }
 
     private Mat4 createModelMatrix(Solid solid, int solidIndex) {
