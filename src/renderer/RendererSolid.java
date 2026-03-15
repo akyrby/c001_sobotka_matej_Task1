@@ -23,6 +23,7 @@ public class RendererSolid {
 
     private Mat4 viewMatrix = new Mat4Identity();
     private Mat4 projectionMatrix = new Mat4Identity();
+    private boolean wireframe = false;
 
     public RendererSolid(LineRasterizer lineRasterizer, TriangleRasterizer triangleRasterizer,
                          int viewportWidth, int viewportHeight) {
@@ -42,6 +43,10 @@ public class RendererSolid {
 
     public void setProjectionMatrix(Mat4 projectionMatrix) {
         this.projectionMatrix = projectionMatrix;
+    }
+
+    public void setWireframe(boolean wireframe) {
+        this.wireframe = wireframe;
     }
 
     public void render(Solid solid) {
@@ -81,7 +86,7 @@ public class RendererSolid {
         }
     }
 
-   
+    //  Lines 
 
     private void renderLine(Vertex vA, Vertex vB, Mat4 mvp) {
         Point3D cA = vA.getPosition().mul(mvp);
@@ -114,7 +119,8 @@ public class RendererSolid {
                 (int) Math.round(sB.getX()), (int) Math.round(sB.getY()));
     }
 
-   
+    //  Triangles 
+
     private void renderTriangle(Vertex vA, Vertex vB, Vertex vC, Mat4 mvp) {
         Point3D cA = vA.getPosition().mul(mvp);
         Point3D cB = vB.getPosition().mul(mvp);
@@ -125,7 +131,10 @@ public class RendererSolid {
                 new Col[]{vA.getCol(), vB.getCol(), vC.getCol()});
     }
 
-    /// Clips triangle against near plane, then maps to screenpace and rasterizes. Assumes triangle vertices are in clip space.
+    /**
+     * Sutherland-Hodgman clip against the near plane (z_clip >= 0),
+     * then transform each resulting triangle to screen space and rasterize.
+     */
     private void clipAndRenderTriangle(Point3D[] clipPts, Col[] cols) {
         List<Point3D> outPts = new ArrayList<>(6);
         List<Col> outCols = new ArrayList<>(6);
@@ -145,32 +154,42 @@ public class RendererSolid {
                 outCols.add(ccurr);
             }
             if (currIn != nextIn) {
-                // intersection on near plane (z_clip = 0)
                 double t = curr.getZ() / (curr.getZ() - next.getZ());
                 outPts.add(lerpPt(curr, next, t));
                 outCols.add(lerpCol(ccurr, cnext, t));
             }
         }
 
-        // triangulate fan and rasterize
         for (int i = 1; i + 1 < outPts.size(); i++) {
             Vertex sA = toScreen(outPts.get(0), outCols.get(0));
             Vertex sB = toScreen(outPts.get(i), outCols.get(i));
             Vertex sC = toScreen(outPts.get(i + 1), outCols.get(i + 1));
             if (sA != null && sB != null && sC != null) {
-                triangleRasterizer.rasterize(sA, sB, sC);
+                if (wireframe) {
+                    rasterizeWireEdge(sA, sB);
+                    rasterizeWireEdge(sB, sC);
+                    rasterizeWireEdge(sC, sA);
+                } else {
+                    triangleRasterizer.rasterize(sA, sB, sC);
+                }
             }
         }
     }
 
-    
+    //  Helpers 
+
+    private void rasterizeWireEdge(Vertex a, Vertex b) {
+        lineRasterizer.rasterize(
+                (int) Math.round(a.getX()), (int) Math.round(a.getY()),
+                (int) Math.round(b.getX()), (int) Math.round(b.getY()));
+    }
+
     /** Dehomogenize clip point and map to viewport. Returns null if behind camera or outside z [0,1]. */
     private Vertex toScreen(Point3D clipPt, Col col) {
         if (clipPt.getW() <= 0.0) return null;
         Optional<Vec3D> ndcOpt = clipPt.dehomog();
         if (!ndcOpt.isPresent()) return null;
         Vec3D ndc = ndcOpt.get();
-        // z is guaranteed >= 0 after near clip; only reject far plane
         if (ndc.getZ() > 1.0) return null;
         double x = (ndc.getX() + 1.0) * 0.5 * (viewportWidth - 1);
         double y = (1.0 - ndc.getY()) * 0.5 * (viewportHeight - 1);

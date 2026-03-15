@@ -57,6 +57,7 @@ public class Controller3D {
     private boolean leftMouseDown = false;
     private boolean perspectiveProjection = true;
     private LegendPanel legendPanel;
+    private boolean wireframe = false;
 
     private Mat4 viewMatrix;
     private Mat4 projectionMatrix;
@@ -159,6 +160,14 @@ public class Controller3D {
                         perspectiveProjection = !perspectiveProjection;
                         if (legendPanel != null) {
                             legendPanel.updateProjectionMode(perspectiveProjection);
+                        }
+                        break;
+
+                    case KeyEvent.VK_M:
+                        wireframe = !wireframe;
+                        rendererSolid.setWireframe(wireframe);
+                        if (legendPanel != null) {
+                            legendPanel.updateWireframeMode(wireframe);
                         }
                         break;
 
