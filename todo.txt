@@ -2,11 +2,17 @@
 2. HOTOVO: (M)Modelovací transforamce = model space -> world space
 3. HOTOVO: (V)KAMERA (pohledová transformace) = world space -> view space
 4. HOTOVO: (P) Projekce (projekční transformace persp/orth) = view space -> clip space
-5. TODO: Ořezání fast, ořezání z, ořezání x,y
+5. HOTOVO: Ořezání fast, ořezání z, ořezání x,y
 6. HOTOVO: Dehomogenizace (Dělení všech souřadnic w (x,y,z,w) -> NDC
 7. HOTOVO: Transforamce do okna obrazovky
 8. HOTOVO: Rasterizace trojúhelníky
 9. HOTOVO: Viditelnost - ZBuffer
 
 
-TODO: Abstract TriangleRasterizer - vytvořit abstraktní třídu
+TODO: Implementujte mapovaní textury na povrch těles. Každé těleso bude mít jinou texturu.
+TODO: Umožněte zapnutí a vypnutí textury na aktivním tělese. Ostatní tělesa v ten moment zůstanou v původním režimu.
+TODO: Znázorněte soustavu souřadnic scény zobrazením barevně odlišených souřadnicových os. Osy budou mít podobu šipky (1 hrana a 1 trojúhelník).
+TODO: Implementujte osvětlení ve scéně (Phongův osvětlovací model). Do výpočtu zahrňte ambientní a difúzní složku. Spekulární složka bude počítána jako bonus.
+TODO: Pozici zdroje světla znázorněte jako kouli o vhodné velikosti. Barva koule bude odpovídat barvě difúzní složky.
+TODO: Zdroj světla lze zvolit jako aktivní těleso a aplikovat na něj modelovací transformaci posunutí.
+Natočte scénu a umístěte tělesa tak, aby byla zřejmá správná funkce algoritmu viditelnosti, vhodné je například protnutí dvou těles.
