@@ -4,14 +4,14 @@ public class Cube extends Solid {
     public Cube() {
         super(new java.util.ArrayList<>(), new java.util.ArrayList<>(), new java.util.ArrayList<>(), new transforms.Mat4Identity());
         // Define the 8 vertices of the cube
-        vertexBuffer.add(new Vertex(100, 100, 0.5, new transforms.Col(255, 0, 0))); // V0
-        vertexBuffer.add(new Vertex(200, 100, 0.5, new transforms.Col(0, 255, 0))); // V1
-        vertexBuffer.add(new Vertex(200, 200, 0.5, new transforms.Col(0, 0, 255))); // V2
-        vertexBuffer.add(new Vertex(100, 200, 0.5, new transforms.Col(255, 255, 0))); // V3
-        vertexBuffer.add(new Vertex(100, 100, 0.3, new transforms.Col(255, 0, 255))); // V4
-        vertexBuffer.add(new Vertex(200, 100, 0.3, new transforms.Col(0, 255, 255))); // V5
-        vertexBuffer.add(new Vertex(200, 200, 0.3, new transforms.Col(255, 255, 255))); // V6
-        vertexBuffer.add(new Vertex(100, 200, 0.3, new transforms.Col(128, 128, 128))); // V7
+        vertexBuffer.add(new Vertex(100, 100, 0.3, new transforms.Col(255, 0, 0))); // V0
+        vertexBuffer.add(new Vertex(200, 100, 0.3, new transforms.Col(0, 255, 0))); // V1
+        vertexBuffer.add(new Vertex(200, 200, 0.3, new transforms.Col(0, 0, 255))); // V2
+        vertexBuffer.add(new Vertex(100, 200, 0.3, new transforms.Col(255, 255, 0))); // V3
+        vertexBuffer.add(new Vertex(100, 100, 0.9, new transforms.Col(255, 0, 255))); // V4
+        vertexBuffer.add(new Vertex(200, 100, 0.9, new transforms.Col(0, 255, 255))); // V5
+        vertexBuffer.add(new Vertex(200, 200, 0.9, new transforms.Col(255, 255, 255))); // V6
+        vertexBuffer.add(new Vertex(100, 200, 0.9, new transforms.Col(128, 128, 128))); // V7
 
         // Define the 12 triangles (two per face)
         addIndices(0, 1, 2); // Front face
