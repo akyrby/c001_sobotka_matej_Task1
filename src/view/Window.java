@@ -30,4 +30,8 @@ public class Window extends JFrame {
     public Panel getPanel() {
         return panel;
     }
+
+    public LegendPanel getLegendPanel() {
+        return legendPanel;
+    }
 }

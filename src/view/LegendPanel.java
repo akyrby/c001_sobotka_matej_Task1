@@ -6,6 +6,8 @@ import java.awt.*;
 
 public class LegendPanel extends JPanel {
 
+    private final JLabel projectionLabel;
+
     public LegendPanel() {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(280, 0));
@@ -35,12 +37,22 @@ public class LegendPanel extends JPanel {
         content.add(section("Camera (view)"));
         content.add(row("W / S", "Move forward / back"));
         content.add(row("A / D", "Strafe left / right"));
-        content.add(row("Mouse", "Look around (yaw/pitch)"));
+        content.add(row("Mouse", "Look around (hold LMB)"));
+        content.add(Box.createVerticalStrut(10));
+
+        content.add(section("Projection"));
+        content.add(row("P", "Toggle perspective / ortho"));
+        projectionLabel = new JLabel("Mode: Perspective");
+        projectionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        projectionLabel.setFont(projectionLabel.getFont().deriveFont(Font.ITALIC, 12f));
+        content.add(projectionLabel);
         content.add(Box.createVerticalStrut(12));
 
-
-
         add(content, BorderLayout.NORTH);
+    }
+
+    public void updateProjectionMode(boolean perspective) {
+        projectionLabel.setText("Mode: " + (perspective ? "Perspective" : "Orthographic"));
     }
 
     private JLabel title(String text) {
