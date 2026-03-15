@@ -21,9 +21,9 @@ public class Arrow extends Solid{
         addIndices(4,3,2); //Triangle
 
 
-        partBuffer.add(new SolidPart(Topology.LINES,0,1));
+        partBuffer.add(new SolidPart(Topology.LINES,1,0));
 
-        partBuffer.add(new SolidPart(Topology.TRIANGLES,2,1));
+        partBuffer.add(new SolidPart(Topology.TRIANGLES,1,2));
     }
 
 }
