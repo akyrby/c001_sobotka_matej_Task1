@@ -10,6 +10,7 @@ import renderer.RendererSolid;
 import transforms.Col;
 import view.Panel;
 import model.Cube;
+import model.Cylinder;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -62,6 +63,7 @@ public class Controller3D {
         rendererSolid.render(new Arrow());
         rendererSolid.render(new Sphere());
         rendererSolid.render(new Cube());
+        rendererSolid.render(new Cylinder());
 
         panel.repaint();
     }
