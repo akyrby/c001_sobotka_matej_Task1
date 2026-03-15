@@ -29,7 +29,7 @@ public class LegendPanel extends JPanel {
         content.add(row("← / →", "Move on X"));
         content.add(row("↑ / ↓", "Move on Z"));
         content.add(row("R / F", "Move on Y"));
-        content.add(row("Z / X", "Scale down / up"));
+        content.add(row("X / C", "Scale up / down"));
         content.add(Box.createVerticalStrut(10));
 
         content.add(section("Camera (view)"));

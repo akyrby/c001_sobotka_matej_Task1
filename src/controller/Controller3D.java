@@ -121,7 +121,7 @@ public class Controller3D {
                         solidMoveY[selectedSolidIndex] -= 0.1;
                         break;
 
-                    case KeyEvent.VK_Z:
+                    case KeyEvent.VK_C:
                         solidScale[selectedSolidIndex] = Math.max(0.1, solidScale[selectedSolidIndex] - 0.05);
                         break;
                     case KeyEvent.VK_X:
