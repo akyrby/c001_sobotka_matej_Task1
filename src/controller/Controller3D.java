@@ -11,12 +11,14 @@ import rasterize.LineRasterizerGraphics;
 import rasterize.TriangleRasterizer;
 import renderer.RendererSolid;
 import transforms.Mat4;
+import transforms.Mat4OrthoRH;
 import transforms.Mat4PerspRH;
 import transforms.Mat4RotY;
 import transforms.Mat4Scale;
 import transforms.Mat4Transl;
 import transforms.Mat4ViewRH;
 import transforms.Vec3D;
+import view.LegendPanel;
 import view.Panel;
 
 import java.awt.event.KeyAdapter;
@@ -53,6 +55,8 @@ public class Controller3D {
     private Integer lastMouseX = null;
     private Integer lastMouseY = null;
     private boolean leftMouseDown = false;
+    private boolean perspectiveProjection = true;
+    private LegendPanel legendPanel;
 
     private Mat4 viewMatrix;
     private Mat4 projectionMatrix;
@@ -78,7 +82,6 @@ public class Controller3D {
         Arrays.fill(solidScale, 1.0);
 
         updateViewProjectionMatrices();
-
 
         initListeners();
 
@@ -150,6 +153,13 @@ public class Controller3D {
                         break;
                     case KeyEvent.VK_D:
                         moveCamera(0.0, CAMERA_MOVE_STEP);
+                        break;
+
+                    case KeyEvent.VK_P:
+                        perspectiveProjection = !perspectiveProjection;
+                        if (legendPanel != null) {
+                            legendPanel.updateProjectionMode(perspectiveProjection);
+                        }
                         break;
 
                     default:
@@ -232,11 +242,21 @@ public class Controller3D {
         panel.repaint();
     }
 
+    public void setLegendPanel(LegendPanel legendPanel) {
+        this.legendPanel = legendPanel;
+    }
+
     private void updateViewProjectionMatrices() {
         int width = panel.getRaster().getWidth();
         int height = panel.getRaster().getHeight();
 
-        projectionMatrix = new Mat4PerspRH(Math.toRadians(60.0), (double) height / width, 0.1, 50.0);
+        if (perspectiveProjection) {
+            projectionMatrix = new Mat4PerspRH(Math.toRadians(60.0), (double) height / width, 0.1, 50.0);
+        } else {
+            double orthoH = 5.0;
+            double orthoW = orthoH * (double) width / height;
+            projectionMatrix = new Mat4OrthoRH(orthoW, orthoH, 0.1, 50.0);
+        }
 
         double cosPitch = Math.cos(cameraPitch);
         Vec3D viewVector = new Vec3D(
