@@ -33,8 +33,9 @@ public class LegendPanel extends JPanel {
         content.add(Box.createVerticalStrut(10));
 
         content.add(section("Camera (view)"));
-        content.add(row("A / D", "Orbit left / right"));
-        content.add(row("W / S", "Zoom in / out"));
+        content.add(row("W / S", "Move forward / back"));
+        content.add(row("A / D", "Strafe left / right"));
+        content.add(row("Mouse", "Look around (yaw/pitch)"));
         content.add(Box.createVerticalStrut(12));
 
 
